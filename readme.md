@@ -100,3 +100,8 @@ docker rm jenkins-blueocean
 ```bash
 git remote set-url origin https://github.com/trandongtruclam/jenkins-101.git
 ```
+
+- choosing POLL SCM: 2 phút sẽ kiểm tra github 1 lần, có code push lên sẽ tự chạy build
+```bash
+H/2 * * * *
+```
