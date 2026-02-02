@@ -1,7 +1,7 @@
 import fire
 
-def hello(name="Jenkins"):
-  return "Testing auto build of %s!" % name
+def hello(name="Van"):
+  return "Hello %s!" % name
 
 
 if __name__ == '__main__':
