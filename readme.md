@@ -102,6 +102,8 @@ docker rm jenkins-blueocean
 ```bash
 docker compose down -v
 docker compose up -d --build
+
+docker compose stop
 ```
 
 - 431 Request Header Fields Too Large on Jenkins (because of cookies) => delete cookie or open an private tab
