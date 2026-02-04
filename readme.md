@@ -97,6 +97,12 @@ taskkill //F //PID 21100
 ```bash
 docker rm jenkins-blueocean
 ```
+- Tắt và xóa luôn container + Build và chạy lại từ đầu
+
+```bash
+docker compose down -v
+docker compose up -d --build
+```
 
 - 431 Request Header Fields Too Large on Jenkins (because of cookies) => delete cookie or open an private tab
 
