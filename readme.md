@@ -12,16 +12,16 @@ docker build -t myjenkins-blueocean:2.414.2 .
 
 docker pull devopsjourney1/jenkins-blueocean:2.332.3-1 && docker tag devopsjourney1/jenkins-blueocean:2.332.3-1 myjenkins-blueocean:2.332.3-1
 ```
-các version ở trên không dùng được ở máy tui
+các version ở trên không dùng được ở máy tui - cái này Docker in Docker
 
 ```bash
-docker run --name jenkins-blueocean --restart=on-failure --detach \
+  docker run --name jenkins-blueocean --restart=on-failure --detach \
   --network jenkins --env DOCKER_HOST=tcp://docker:2376 \
   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
   --publish 8080:8080 --publish 50000:50000 \
   --volume jenkins-data:/var/jenkins_home \
   --volume jenkins-docker-certs:/certs/client:ro \
-  jenkins/jenkins:lts-jdk17
+  jenkins/jenkins:lts-jdk21
 ```
 
 ## Create the network 'jenkins'
@@ -85,6 +85,10 @@ docker pull devopsjourney1/myjenkinsagents:python
 ```
 
 ## some more
+- find a port with its PID
+```bash
+netstat -ano | findstr :8080  
+```
 - kill a task with its PID (Git Bash on administrator)
 ```bash
 taskkill //F //PID 21100
@@ -104,4 +108,54 @@ git remote set-url origin https://github.com/trandongtruclam/jenkins-101.git
 - choosing POLL SCM: 2 phút sẽ kiểm tra github 1 lần, có code push lên sẽ tự chạy build
 ```bash
 H/2 * * * *
+```
+
+## Docker
+- image just an artifact that can not run the app itself
+
+```bash 
+docker build -t book-service:latest .
+
+or
+
+docker build -t book-service:v1.0 .
+
+```
+
+
+- detached mode (starting in the background instead of in the terminal )
+``` bash
+docker run -d -p 3000:3000 --name book-service-v.1.0 book-service 
+```
+``` bash
+docker run -d -p 8080:3000 book-service book-service 
+// expose 3000 express server to 8080 
+logs:
+$ docker run -d -p 8080:3000 --name book-service-v2.0 book-service
+0c26317e7159d77f7b268032ea24bb8f1b23e319ae135a6231bdb1140cc18c41
+docker: Error response from daemon: ports are not available: exposing port TCP 0.0.0.0:8080 -> 127.0.0.1:0: listen tcp 0.0.0.0:8080: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+
+docker run -d --name book-service-v1.0 book-service (name container - image)
+// (named the container instead of the random string)
+```
+
+- execute the container in bash, it - interact with process inside the window
+
+```bash
+docker exec -it book-service-v2.0 bash
+```
+
+- connect mongodb 
+```bash
+mongodb://book-service-db:27017/books
+```
+
+- remove dangling images
+```bash
+docker image prune
+```
+
+- List all container in use
+```bash
+docker ps -a
 ```
