@@ -167,3 +167,39 @@ docker image prune
 ```bash
 docker ps -a
 ```
+
+- Ideally we cant have access to localhost:3001/loans just by reverse proxy for security
+- here we can access to localhost:80/api/books and localhost:80/api/loans
+```bash
+events {}
+
+http {
+    server {
+        listen 80;
+
+        location /api/books {
+            proxy_pass http://book-service:3000/books;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /api/loans {
+            proxy_pass http://loan-service:3001/loans;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}
+```
+
+- Push docker image to docker hub
+
+```bash
+docker build -t tlime/book-service:v1 .
+docker push tlime/book-service:v1
+
+```
